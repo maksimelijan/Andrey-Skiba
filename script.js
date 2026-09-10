@@ -1,21 +1,33 @@
-let lastScrollY=window.scrollY;
 const header=document.querySelector('.site-header');
+let lastScrollY=window.scrollY;
 let ticking=false;
 
 function updateHeader(){
   const currentScrollY=window.scrollY;
+  const delta=currentScrollY-lastScrollY;
+
   if(header){
-    if(currentScrollY>lastScrollY && currentScrollY>80){
+    if(currentScrollY<=10){
+      header.classList.remove('header-hidden');
+    }else if(delta>3){
       header.classList.add('header-hidden');
-    }else if(currentScrollY<lastScrollY){
+    }else if(delta<-3){
       header.classList.remove('header-hidden');
     }
   }
+
   lastScrollY=currentScrollY;
   ticking=false;
 }
 
 window.addEventListener('scroll',()=>{
+  if(!ticking){
+    window.requestAnimationFrame(updateHeader);
+    ticking=true;
+  }
+},{passive:true});
+
+window.addEventListener('touchmove',()=>{
   if(!ticking){
     window.requestAnimationFrame(updateHeader);
     ticking=true;
