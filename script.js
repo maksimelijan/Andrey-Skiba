@@ -1,38 +1,37 @@
-const header=document.querySelector('.site-header');
-let lastScrollY=window.scrollY;
-let ticking=false;
+const header = document.querySelector('.site-header');
+let lastScrollY = window.scrollY;
+let ticking = false;
 
-function updateHeader(){
-  const currentScrollY=window.scrollY;
-  const delta=currentScrollY-lastScrollY;
+function updateHeader() {
+  if (!header) return;
 
-  if(header){
-    if(currentScrollY<=10){
-      header.classList.remove('header-hidden');
-    }else if(delta>3){
-      header.classList.add('header-hidden');
-    }else if(delta<-3){
-      header.classList.remove('header-hidden');
-    }
+  const currentScrollY = window.scrollY;
+
+  if (currentScrollY <= 5) {
+    header.classList.remove('header-hidden');
+  } else if (currentScrollY > lastScrollY) {
+    header.classList.add('header-hidden');
+  } else if (currentScrollY < lastScrollY) {
+    header.classList.remove('header-hidden');
   }
 
-  lastScrollY=currentScrollY;
-  ticking=false;
+  lastScrollY = currentScrollY;
+  ticking = false;
 }
 
-window.addEventListener('scroll',()=>{
-  if(!ticking){
-    window.requestAnimationFrame(updateHeader);
-    ticking=true;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(updateHeader);
+    ticking = true;
   }
-},{passive:true});
+}, { passive: true });
 
-window.addEventListener('touchmove',()=>{
-  if(!ticking){
-    window.requestAnimationFrame(updateHeader);
-    ticking=true;
-  }
-},{passive:true});
+document.querySelectorAll('a[href^="http"]').forEach(a => {
+  a.addEventListener('click', () => a.blur());
+});
 
-document.querySelectorAll('a[href^="http"]').forEach(a=>a.addEventListener('click',()=>a.blur()));
-document.querySelectorAll('img[src="andrey-skiba.jpg"]').forEach(img=>img.addEventListener('error',()=>{img.src='avatar.svg'}));
+document.querySelectorAll('img[src="andrey-skiba.jpg"]').forEach(img => {
+  img.addEventListener('error', () => {
+    img.src = 'avatar.svg';
+  });
+});
